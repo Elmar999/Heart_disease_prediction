@@ -7,7 +7,10 @@ class Neural:
         self.data = data_matrix
 
         for i in range (len(self.data[0])-1):
+            # NORMALIZATION
             # self.data[:,i] = (self.data[:,i] - np.min(self.data[:,i])) / (np.max(self.data[:,i])-np.min(self.data[:,i]))
+            
+            # STANDARTIZATION 
             self.data[:,i] = (self.data[:,i] - np.mean(self.data[:,i])) / np.std(self.data[:,i])
             
 
@@ -42,10 +45,9 @@ class Neural:
         for i in range(self.testingSize):
             for j in range(self.nbFeatures):
                 self.testingData[i][j] = self.data[i + self.trainingSize][j]
-				
-        # self.trainingData = (self.trainingData - np.mean(self.trainingData) / )
-        # print(self.trainingData[:,:], end="\n")
-        # print(self.testingData[:,-1])
+			
+
+            
         self.X_train = np.empty(shape = (self.batch_size,self.nbFeatures - 1))
         self.Y_train = np.empty(shape = (self.batch_size,self.K_classes))
 

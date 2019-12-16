@@ -22,7 +22,7 @@ matrix = data.to_numpy()
 
 np.random.shuffle(matrix)
 # print(matrix)
-nn = NN.Neural(data_matrix=matrix ,batch_size = 1 , K_classes = 2 , n_hidden=1 , n_h_neuron=20)
+nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 , n_h_neuron=20)
 
 
 nn.train_epoch(n_epoch = 200)
