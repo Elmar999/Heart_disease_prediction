@@ -22,11 +22,12 @@ matrix = data.to_numpy()
 
 np.random.shuffle(matrix)
 # print(matrix)
-nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 , n_h_neuron=20)
+nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 , n_h_neuron=128)
 
 
-nn.train_epoch(n_epoch = 200)
-nn.prediction_accuracy()
+nn.train_epoch(n_epoch = 300)
+err = 0
+nn.prediction_accuracy(err)
 
 # print(nn.Y_train)
 

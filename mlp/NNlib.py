@@ -45,6 +45,14 @@ class NNLib:
         return e_x / e_x.sum()
 
 
+
+    def tanh(x , derivative = False):
+        if not derivative:
+            return (2/(1+np.exp(-x))) - 1
+
+        return 1 - ((2/(1+np.exp(-x))) - 1)**2
+
+
     def sigmoid(x, derivative=False):
         if not derivative:
             # x = np.clip( x, -500, 500 )

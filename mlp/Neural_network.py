@@ -28,14 +28,17 @@ class Neural:
         self.testingData = np.empty(shape = (self.testingSize , self.nbFeatures))		
 		
 
-        self.W1 = np.empty(shape = (self.nbFeatures - 1, K_classes) , dtype='float32')
-        self.W1 = self.initMatrix(self.W1)
+        self.W = {}
+        self.W[0] = np.empty(shape = (self.nbFeatures - 1, n_h_neuron) , dtype='float128')
+        self.W[0] = self.initMatrix(self.W[0])
 
-        self.W2 = np.empty(shape = (n_h_neuron , K_classes) , dtype='float32')
-        self.W2 = self.initMatrix(self.W2)
+        self.W[1] = np.empty(shape = (n_h_neuron , K_classes) , dtype='float128')
+        self.W[1] = self.initMatrix(self.W[1])
 
 
-        self.b1 = np.empty(shape = (1 , K_classes))          
+        self.b = {}
+        self.b[0] = np.empty(shape = (1 , n_h_neuron))     
+        self.b[1] = np.empty(shape = (1 , K_classes))     
 
 		#copy data into training and testing set
         for i in range(self.trainingSize):
@@ -47,7 +50,7 @@ class Neural:
                 self.testingData[i][j] = self.data[i + self.trainingSize][j]
 			
 
-            
+
         self.X_train = np.empty(shape = (self.batch_size,self.nbFeatures - 1))
         self.Y_train = np.empty(shape = (self.batch_size,self.K_classes))
 
@@ -104,55 +107,67 @@ class Neural:
         return X , Y
 
 
-    def predict(self, X):
-        
-        H1 = X @ self.W1 + self.b1
-        y = nlb.NNLib.sigmoid(H1)
-        return y
+    def predict(self, W , X , b):
+        H = {}
+        H[0] = X @ W[0] + b[0]
+        A1 = nlb.NNLib.tanh(H[0])
+        H[1] = A1 @ W[1] + b[1]
+        y_hat = nlb.NNLib.sigmoid(H[1])
 
-
-    def feed_forward(self , X , W1 , b1):
-        #using matrix multiplication sign -- @
-        H1 = X @ W1 + b1
-        #applying activation function
-        y_hat = nlb.NNLib.sigmoid(H1)
-        
         return y_hat
+
+
+    def feed_forward(self , X , W, b):
+        #using matrix multiplication sign -- @
+        H = {}
+        H[0] = X @ W[0] + b[0]
+        A1 = nlb.NNLib.tanh(H[0])
+        H[1] = A1 @ W[1] + b[1]
+        y_hat = nlb.NNLib.sigmoid(H[1])
+        
+        return y_hat , H
         
 
-    def back_prop(self , y_hat , y , X):
-        
+    def back_prop(self , y_hat , y , H , W ,X):
+        dW , db = {} , {}
         loss = 2 * (y_hat - y)
         # when function takes true it means it is derivative of func
-        delta = loss * nlb.NNLib.sigmoid(y_hat, True)
-        dW = delta.T @ X
-
-        db = delta
+        delta = loss * nlb.NNLib.sigmoid(y_hat,True) 
+    
+        dW[1] = delta.T @ nlb.NNLib.sigmoid(H[0])
+    
+        dW[0] = X.T @ (delta @ W[1].T * nlb.NNLib.tanh(H[0] , True))
+        
+        db[1] = delta
+        # db[2] = 
 
         return dW , db
 
     
-    def prediction_accuracy(self):
+    def prediction_accuracy(self , prev_err , error = False):
         acc = 0
-        for i in range(len(self.X_test)):
-            acc += nlb.NNLib.accuracy(self.predict(self.X_test[i]), self.Y_test[i])
-            # print(self.Y_test[i])
-        # print(self.Y_test)
-        print(acc / len(self.X_test) * 100)
+        if error:
+            err = np.mean((self.predict(self.W , self.X_test , self.b) - self.Y_test)**2)
+            print(err)
+            return err
+        else:
+            for i in range(len(self.X_test)):
+                acc += nlb.NNLib.accuracy(self.predict(self.W , self.X_test[i] , self.b), self.Y_test[i])
+
+            print(acc / len(self.X_test) * 100)
 
 
     
     def train_epoch(self , n_epoch):
-        # self.X_train  , self.Y_train = self.load_attributes_labels(self.trainingData , self.X_train , self.Y_train , 0 , self.batch_size)
         
         epoch = n_epoch
         n_iteration = self.trainingSize/self.batch_size
-        
+        err = 0
+
         for j in range(n_epoch):
             np.random.shuffle(self.trainingData)
-            # np.seterr(over='ignore')
-
             total_error = 0.
+
             for i in range(int(n_iteration)):
                 self.X_train  , self.Y_train = self.load_attributes_labels(self.trainingData , self.X_train , 
                                         self.Y_train , self.batch_size * i , self.batch_size)
@@ -165,9 +180,10 @@ class Neural:
                     
                     X = np.reshape(X , (1 ,  X.shape[0]))
 
-                    y_hat  = self.feed_forward(X , self.W1 , self.b1)
+                    y_hat , H  = self.feed_forward(X , self.W , self.b)
                     
                     y = self.Y_train[z]
+
                     
                     # --------------- BACKPROPOGATION
 
@@ -179,17 +195,22 @@ class Neural:
 
                     total_error += error
 
-                    dW , db = self.back_prop(y_hat , y , X )
+                    # print(y_hat)
+
+                    dW , db = self.back_prop(y_hat , y , H , self.W , X )
                     
                     
                     # ----------UPDATE PARAMETERS -------------
-                    n = .001
-                    self.W1 -= n*dW.T
-                    self.b1 -= n*db
-                    # print(self.W1)
-                # exit(0)
-            print(total_error / (self.batch_size * n_iteration))
-            acc = 0
+                    n = .01
+                    self.W[0] -= n*dW[0]
+                    self.W[1] -= n*dW[1].T
+                    # self.b1 -= n*db[0]
+                    self.b[1] -= n*db[1]
+
+
+            err = self.prediction_accuracy(err , True)
+            # print(self.y)
+            # print(total_error / (self.batch_size * n_iteration))
 
 
 
