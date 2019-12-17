@@ -133,13 +133,12 @@ class Neural:
         loss = 2 * (y_hat - y)
         # when function takes true it means it is derivative of func
         delta = loss * nlb.NNLib.sigmoid(y_hat,True) 
-    
-        dW[1] = delta.T @ nlb.NNLib.sigmoid(H[0])
-    
+
         dW[0] = X.T @ (delta @ W[1].T * nlb.NNLib.tanh(H[0] , True))
-        
+        dW[1] = delta.T @ nlb.NNLib.sigmoid(H[0])
+
+        db[0] = delta @ W[1].T * nlb.NNLib.tanh(H[0] , True)
         db[1] = delta
-        # db[2] = 
 
         return dW , db
 
@@ -152,7 +151,7 @@ class Neural:
             
             if prev_err < err:
                 # early stopping
-                print("early stop")
+                # print("early stop")
                 return 0
             else:
                 prev_err = err
@@ -205,13 +204,15 @@ class Neural:
                     n = .01
                     self.W[0] -= n*dW[0]
                     self.W[1] -= n*dW[1].T
-                    # self.b[0] -= n*db[0]
+                    # print(self.b[0].shape)
+                    self.b[0] -= n*db[0]
                     self.b[1] -= n*db[1]
 
 
-            if j % 10 == 0 and j != 0:
+            if j % 10 == 0 :
                 prev = self.prediction_accuracy(prev , True)
-                if prev == 0:
+                if prev == 0 and j != 0:
+                    # print(j)
                     break
             # print(total_error / (self.batch_size * n_iteration))
 
