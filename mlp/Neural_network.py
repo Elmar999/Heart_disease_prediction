@@ -78,8 +78,8 @@ class Neural:
         # random.seed(1000)
         for i in range(len(A)):
             for j in range(len(A[0])):  
-                # self.A[i][j] =  random.uniform(-.0001 , .0001)
-                self.A[i][j] = np.random.normal(0, 1/np.sqrt(self.n_h_neuron)) 
+                self.A[i][j] =  random.uniform(-.0001 , .0001)
+                # self.A[i][j] = np.random.normal(0, 1/np.sqrt(self.n_h_neuron)) 
 
         # print(self.A)
         return self.A     
@@ -152,11 +152,10 @@ class Neural:
             
             if prev_err < err:
                 # early stopping
-                # print("early stop")
+                print("early stop")
                 return 0
             else:
                 prev_err = err
-                # print(err)
                 return prev_err
             return err
         else:
@@ -202,7 +201,7 @@ class Neural:
                     dW , db = self.back_prop(y_hat , y , H , self.W , X )
                                         
                     # ----------UPDATE PARAMETERS -------------
-                    n = .01
+                    n = .001
                     self.W[0] -= n*dW[0]
                     self.W[1] -= n*dW[1].T
                     # print(self.b[0].shape)

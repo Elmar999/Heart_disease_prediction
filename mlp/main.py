@@ -9,29 +9,20 @@ path = "disease.csv"
 data = pd.read_csv(path , sep=";")
 
 
-categorical_columns = []
+categorical_columns = ['chest_pain_type' , 'fasting_blood_sugar' , 'rest_ecg' , 'exercise_induced_angina' , 'st_slope' , 
+    'num_major_vessels' ,'thalassemia']
 
-for col in list(data):
-    # print(len(data[col].unique()))
-    if len(data[col].unique()) < 4:
-        pd.get_dummies(data , columns = col , prefix = col)
-
+data = pd.get_dummies(data , columns = categorical_columns , prefix = categorical_columns)
 
 mat_corr = data.corr()
-# print(mat_corr)
-
-
-# print(data.head())
 matrix = data.to_numpy()
-# print(matrix)
-# print()
 
 np.random.shuffle(matrix)
-# print(matrix)
+
 nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 , n_h_neuron=5)
 
 
-nn.train_epoch(n_epoch = 500)
+nn.train_epoch(n_epoch = 80)
 err = 0
 nn.prediction_accuracy(err)
 

@@ -79,6 +79,12 @@ class NNLib:
         # return -np.log(yHat[np.where(y)])
 
 
+    def binary_cross_entropy(self , y_pred , y_true):
+        res = 0
+
+        pass    
+
+
     def softmax_deriv(Z):
         return Z*(1-Z)
 
