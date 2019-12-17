@@ -201,7 +201,7 @@ class Neural:
                     dW , db = self.back_prop(y_hat , y , H , self.W , X )
                                         
                     # ----------UPDATE PARAMETERS -------------
-                    n = .001
+                    n = .01
                     self.W[0] -= n*dW[0]
                     self.W[1] -= n*dW[1].T
                     # print(self.b[0].shape)
