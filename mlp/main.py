@@ -10,7 +10,7 @@ data = pd.read_csv(path , sep=";")
 
 
 
-# data = data.drop(columns = [ 'st_depression' ])
+# data = data.drop(columns = [ 'st_depression' , 'age'])
 mat_corr = data.corr()
 # print(mat_corr)
 
@@ -22,10 +22,10 @@ matrix = data.to_numpy()
 
 np.random.shuffle(matrix)
 # print(matrix)
-nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 , n_h_neuron=128)
+nn = NN.Neural(data_matrix=matrix ,batch_size = 32 , K_classes = 2 , n_hidden=1 , n_h_neuron=32)
 
 
-nn.train_epoch(n_epoch = 100)
+nn.train_epoch(n_epoch = 500)
 err = 0
 nn.prediction_accuracy(err)
 

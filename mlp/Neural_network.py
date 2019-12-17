@@ -29,10 +29,10 @@ class Neural:
 		
 
         self.W = {}
-        self.W[0] = np.empty(shape = (self.nbFeatures - 1, n_h_neuron) , dtype='float128')
+        self.W[0] = np.empty(shape = (self.nbFeatures - 1, n_h_neuron) , dtype='float64')
         self.W[0] = self.initMatrix(self.W[0])
 
-        self.W[1] = np.empty(shape = (n_h_neuron , K_classes) , dtype='float128')
+        self.W[1] = np.empty(shape = (n_h_neuron , K_classes) , dtype='float64')
         self.W[1] = self.initMatrix(self.W[1])
 
 
@@ -148,7 +148,16 @@ class Neural:
         acc = 0
         if error:
             err = np.mean((self.predict(self.W , self.X_test , self.b) - self.Y_test)**2)
-            print(err)
+            print(prev_err , err)
+            
+            if prev_err < err:
+                # early stopping
+                print("early stop")
+                return 0
+            else:
+                prev_err = err
+                # print(err)
+                return prev_err
             return err
         else:
             for i in range(len(self.X_test)):
@@ -162,7 +171,7 @@ class Neural:
         
         epoch = n_epoch
         n_iteration = self.trainingSize/self.batch_size
-        err = 0
+        prev = 100
 
         for j in range(n_epoch):
             np.random.shuffle(self.trainingData)
@@ -187,29 +196,23 @@ class Neural:
                     
                     # --------------- BACKPROPOGATION
 
-                    # print(y_hat , "------" , y)
-
-                    # print(y , y_hat)
                     error = np.mean((y_hat - y)**2)
-                    # print(error)
-
                     total_error += error
 
-                    # print(y_hat)
-
                     dW , db = self.back_prop(y_hat , y , H , self.W , X )
-                    
-                    
+                                        
                     # ----------UPDATE PARAMETERS -------------
-                    n = .001
+                    n = .01
                     self.W[0] -= n*dW[0]
                     self.W[1] -= n*dW[1].T
-                    # self.b1 -= n*db[0]
+                    # self.b[0] -= n*db[0]
                     self.b[1] -= n*db[1]
 
 
-            err = self.prediction_accuracy(err , True)
-            # print(self.y)
+            if j % 10 == 0 and j != 0:
+                prev = self.prediction_accuracy(prev , True)
+                if prev == 0:
+                    break
             # print(total_error / (self.batch_size * n_iteration))
 
 

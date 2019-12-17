@@ -2,15 +2,15 @@ import random
 import numpy as np
 class NNLib:
 
-    def initMatrix(self , A):
-        self.A = A
-        random.seed(100)
-        for i in range(len(A)):
-            for j in range(len(A[0])):
-                self.A[i][j] =  random.uniform(-.0001 , .0001)
+    # def initMatrix(self , A):
+    #     self.A = A
+    #     random.seed(100)
+    #     for i in range(len(A)):
+    #         for j in range(len(A[0])):
+    #             self.A[i][j] =  random.uniform(-.0001 , .0001)
 
-        print(self.A)
-        return self.A     
+    #     print(self.A)
+    #     return self.A     
 
 
     # activation function - ReLU
