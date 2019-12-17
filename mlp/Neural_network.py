@@ -78,7 +78,8 @@ class Neural:
         # random.seed(1000)
         for i in range(len(A)):
             for j in range(len(A[0])):  
-                self.A[i][j] =  random.uniform(-.0001 , .0001)
+                # self.A[i][j] =  random.uniform(-.0001 , .0001)
+                self.A[i][j] = np.random.normal(0, 1/np.sqrt(self.n_h_neuron)) 
 
         # print(self.A)
         return self.A     
@@ -209,11 +210,11 @@ class Neural:
                     self.b[1] -= n*db[1]
 
 
-            if j % 10 == 0 :
+            if j % 10 == 0:
                 prev = self.prediction_accuracy(prev , True)
                 if prev == 0 and j != 0:
-                    # print(j)
                     break
+
             # print(total_error / (self.batch_size * n_iteration))
 
 
