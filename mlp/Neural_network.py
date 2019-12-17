@@ -201,7 +201,7 @@ class Neural:
                     
                     
                     # ----------UPDATE PARAMETERS -------------
-                    n = .01
+                    n = .001
                     self.W[0] -= n*dW[0]
                     self.W[1] -= n*dW[1].T
                     # self.b1 -= n*db[0]
