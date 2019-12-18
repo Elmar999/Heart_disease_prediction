@@ -1,5 +1,7 @@
 import random
 import numpy as np
+import matplotlib.pyplot as plt
+
 class NNLib:
 
     # def initMatrix(self , A):
@@ -125,3 +127,15 @@ class NNLib:
         y_true = np.argmax(y_true)
 
         return np.sum(y_pred == y_true)
+
+    
+    def plot(train_loss , test_loss ):
+        ar = np.arange(0 , 100 , len(train_loss))
+        # print(train_loss)
+        plt.plot(train_loss)
+        plt.plot(test_loss)
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'val'], loc='upper left')
+        plt.show()

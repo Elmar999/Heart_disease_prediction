@@ -54,14 +54,9 @@ class Neural:
         self.X_train = np.empty(shape = (self.batch_size,self.nbFeatures - 1))
         self.Y_train = np.empty(shape = (self.batch_size,self.K_classes))
 
-
-        # self.X_train = (self.X_train - np.mean(self.X_train)) / np.std(self.X_train)
-
         self.X_test = self.data[self.trainingSize:, :-1]
         self.Y_test = self.data[self.trainingSize:,  -1]
 
-        # print(self.X_test)
-        # self.X_test  = (self.X_test - np.mean(self.X_test)) / np.std(self.X_test)
 
         one_hot = np.zeros((self.Y_test.shape[0], self.K_classes))
 
@@ -144,25 +139,12 @@ class Neural:
         return dW , db
 
     
-    def prediction_accuracy(self , prev_err , error = False):
+    def prediction_accuracy(self ,error = False):
         acc = 0
-        if error:
-            err = np.mean((self.predict(self.W , self.X_test , self.b) - self.Y_test)**2)
-            print(prev_err , err)
-            
-            if prev_err < err:
-                # early stopping
-                print("early stop")
-                return 0
-            else:
-                prev_err = err
-                return prev_err
-            return err
-        else:
-            for i in range(len(self.X_test)):
-                acc += nlb.NNLib.accuracy(self.predict(self.W , self.X_test[i] , self.b), self.Y_test[i])
+        for i in range(len(self.X_test)):
+            acc += nlb.NNLib.accuracy(self.predict(self.W , self.X_test[i] , self.b), self.Y_test[i])
 
-            print(acc / len(self.X_test) * 100)
+        print(acc / len(self.X_test) * 100)
 
 
     
@@ -170,11 +152,13 @@ class Neural:
         
         epoch = n_epoch
         n_iteration = self.trainingSize/self.batch_size
-        prev = 100
+        train_error = []
+        test_error = []
 
         for j in range(n_epoch):
             np.random.shuffle(self.trainingData)
-            total_error = 0.
+            total_error_test = 0.
+            total_error_train = 0.
 
             for i in range(int(n_iteration)):
                 self.X_train  , self.Y_train = self.load_attributes_labels(self.trainingData , self.X_train , 
@@ -195,8 +179,8 @@ class Neural:
                     
                     # --------------- BACKPROPOGATION
 
-                    error = np.mean((y_hat - y)**2)
-                    total_error += error
+                    error_train = np.mean((y_hat - y)**2)
+                    total_error_train += error_train
 
                     dW , db = self.back_prop(y_hat , y , H , self.W , X )
                                         
@@ -204,17 +188,21 @@ class Neural:
                     n = .01
                     self.W[0] -= n*dW[0]
                     self.W[1] -= n*dW[1].T
-                    # print(self.b[0].shape)
+
                     self.b[0] -= n*db[0]
                     self.b[1] -= n*db[1]
 
+            error_test = np.mean((self.predict(self.W , self.X_test , self.b) - self.Y_test)**2)
+            
+            
+            total_error_test += error_test
+            total_error_train /= (self.batch_size * n_iteration)
+            
+            train_error.append(total_error_train)
+            test_error.append(total_error_test)
 
-            if j % 10 == 0:
-                prev = self.prediction_accuracy(prev , True)
-                if prev == 0 and j != 0:
-                    break
 
-            # print(total_error / (self.batch_size * n_iteration))
+        return train_error , test_error
 
 
 

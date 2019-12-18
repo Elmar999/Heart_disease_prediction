@@ -2,6 +2,8 @@ import Neural_network as NN
 import Data_manipulation as Dp
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import NNlib as nlb
 
 path = "disease.csv"
 
@@ -22,9 +24,16 @@ np.random.shuffle(matrix)
 nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 , n_h_neuron=5)
 
 
-nn.train_epoch(n_epoch = 200)
-err = 0
-nn.prediction_accuracy(err)
+
+error_train , error_test = [] , []
+error_train  , error_test = nn.train_epoch(n_epoch = 50)
+
+nn.prediction_accuracy()
+
+nlb.NNLib.plot(error_train , error_test)
+
+
+
 
 # print(nn.Y_train)
 
