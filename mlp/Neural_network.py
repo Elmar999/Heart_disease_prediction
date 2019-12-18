@@ -22,7 +22,7 @@ class Neural:
         self.nbFeatures = len(data_matrix[0])
         self.K_classes = K_classes        
         
-        self.trainingSize = int(self.nbInstances * 0.75)
+        self.trainingSize = int(self.nbInstances * 0.70)
         self.testingSize = self.nbInstances - self.trainingSize
         self.trainingData = np.empty(shape = (self.trainingSize , self.nbFeatures))
         self.testingData = np.empty(shape = (self.testingSize , self.nbFeatures))		
@@ -184,7 +184,8 @@ class Neural:
         n_iteration = self.trainingSize/self.batch_size
         train_error = []
         test_error = []
-        history = {}
+        # taking care of history ---> error_train_loss and  error_test_loss 
+        history = {} 
 
         for j in range(n_epoch):
             np.random.shuffle(self.trainingData)
