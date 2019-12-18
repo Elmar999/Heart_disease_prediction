@@ -145,7 +145,7 @@ class NNLib:
                 matrix[0] += 1 # true positive
             elif np.argmax(y_hat[i]) == 0 and np.argmax(y_true[i]) == 1:
                 matrix[1] += 1 # false positive
-            elif np.argmax(y_hat[i]) == 1 and np.argmax(y_true[i]) == 0:
+            elif np.argmax(y_hat[i]) == 1 and np.argmax(y_true[i]) == 1:
                 matrix[3] += 1 # true negative
             else:
                 matrix[2] += 1 # false negative 

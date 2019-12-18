@@ -159,7 +159,7 @@ class Neural:
 
     def recall(self ,y_hat , y_true):
         tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
-        return tp / (tp + tn)
+        return tp / (tp + fn)
 
     def accuracy(self , y_hat , y_true):
         tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
