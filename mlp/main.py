@@ -27,7 +27,7 @@ np.random.shuffle(matrix)
 nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 , n_h_neuron=5)
 
 
-history = nn.train_epoch(n_epoch = 100)
+history = nn.train_epoch(n_epoch = 10)
 
 
 y_pred = nn.predict(nn.W , nn.X_test , nn.b)
