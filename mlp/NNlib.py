@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
 
 class NNLib:
@@ -151,3 +152,10 @@ class NNLib:
                 matrix[2] += 1 # false negative 
         
         return np.array(matrix)
+
+
+    def correlation(data):
+        mat_corr = data.corr()
+        f, ax = plt.subplots(figsize =(9, 8)) 
+        sns.heatmap(mat_corr, ax = ax, annot = True , cmap ="YlGnBu", linewidths = 0.1) 
+        plt.show()

@@ -181,6 +181,7 @@ class Neural:
         n_iteration = self.trainingSize/self.batch_size
         train_error = []
         test_error = []
+        history = {}
 
         for j in range(n_epoch):
             np.random.shuffle(self.trainingData)
@@ -226,11 +227,14 @@ class Neural:
             
             train_error.append(total_error_train)
             test_error.append(total_error_test)
+
+        history['train_loss'] = train_error
+        history['test_loss'] = test_error
        
         # y_pred = (self.predict(self.W , self.X_test , self.b)
         # nlb.NNLib.confusion_matrix(y_pred , self.Y_test)
         # print(ar)
-        return train_error , test_error
+        return history
 
 
 
