@@ -27,12 +27,12 @@ np.random.shuffle(matrix)
 nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 , n_h_neuron=5)
 
 
-history = nn.train_epoch(n_epoch = 30)
+history = nn.train_epoch(n_epoch = 20)
 
 
 y_pred = nn.predict(nn.W , nn.X_test , nn.b)
 
-nlb.NNLib.plot(history)
+# nlb.NNLib.plot(history)
 
 
 print(f"Accuracy    : {nn.accuracy(y_pred , nn.Y_test)}")

@@ -105,6 +105,10 @@ class NNLib:
         plt.show()
 
 
+    def look_proba(y_hat , y_true):
+        for i in range(len(y_hat)):
+            print(y_hat[i] , y_true[i])
+
 
     def confusion_matrix(y_hat , y_true):
         
