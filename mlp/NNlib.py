@@ -5,17 +5,7 @@ import matplotlib.pyplot as plt
 
 class NNLib:
 
-    # def initMatrix(self , A):
-    #     self.A = A
-    #     random.seed(100)
-    #     for i in range(len(A)):
-    #         for j in range(len(A[0])):
-    #             self.A[i][j] =  random.uniform(-.0001 , .0001)
-
-    #     print(self.A)
-    #     return self.A     
-
-
+  
     # activation function - ReLU
     # Z - matrix of activated weighted input
     # return activated matrix
@@ -29,19 +19,6 @@ class NNLib:
 
 
     def softmax(Z):
-        
-        # print(Z)
-
-        # print("\n\n")
-        # softA = np.empty(shape = Z.shape)
-        # for i in range(len(softA[0])):
-        #     for j in range(len(softA)):
-        #         s = 0
-        #         for c in range(len(softA)):
-        #             s += np.exp(Z[c][i])
-        #         softA[j][i] = np.exp(Z[j][i])/s
-
-        # return softA
 
         e_x = np.exp(Z - np.max(Z))
 
@@ -81,13 +58,6 @@ class NNLib:
         return -(1.0/batchSize)*cost
         # return -np.log(yHat[np.where(y)])
 
-
-    def binary_cross_entropy(self , y_pred , y_true):
-        res = 0
-
-        pass    
-
-
     def softmax_deriv(Z):
         return Z*(1-Z)
 
@@ -124,10 +94,10 @@ class NNLib:
         return np.sum(y_pred == y_true)
 
     
-    def plot(train_loss , test_loss ):
+    def plot(history):
         # print(train_loss)
-        plt.plot(train_loss)
-        plt.plot(test_loss)
+        plt.plot(history['train_loss'])
+        plt.plot(history['test_loss'])
         plt.title('model loss')
         plt.ylabel('loss')
         plt.xlabel('epoch')

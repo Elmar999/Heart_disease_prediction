@@ -12,11 +12,12 @@ path = "disease.csv"
 # ANALYSING THE DATA 
 
 data = pd.read_csv(path , sep=";")
-nlb.NNLib.correlation(data)
+# nlb.NNLib.correlation(data)
 
 categorical_columns = ['chest_pain_type' , 'fasting_blood_sugar' , 'rest_ecg' , 'exercise_induced_angina' , 'st_slope' , 
     'num_major_vessels' ,'thalassemia']
 
+# we will make our categorical columns in one hot structure so that it will be much better to train for our network
 data = pd.get_dummies(data , columns = categorical_columns , prefix = categorical_columns) 
 
 
@@ -30,6 +31,8 @@ history = nn.train_epoch(n_epoch = 100)
 
 
 y_pred = nn.predict(nn.W , nn.X_test , nn.b)
+
+nlb.NNLib.plot(history)
 
 
 print(f"Accuracy    : {nn.accuracy(y_pred , nn.Y_test)}")

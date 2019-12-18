@@ -115,6 +115,8 @@ class Neural:
 
     def feed_forward(self , X , W, b):
         #using matrix multiplication sign -- @
+        # we will use Tanh activation function for hidden layers and sigmoid for output layer since sigmoid function
+        # gives us probability between 0 and 1 ... while tanh gives between -1 and 1
         H = {}
         H[0] = X @ W[0] + b[0]
         A1 = nlb.NNLib.tanh(H[0])
@@ -148,28 +150,29 @@ class Neural:
         print(acc / len(self.X_test) * 100)
 
 
-    #     y_pred = self.predict(self.W , self.X_test , self.b)
-    #     ar = nlb.NNLib.confusion_matrix(y_pred , self.Y_test)
-
-
 
     def precision(self, y_hat , y_true):
+        '''When it predicts yes, how often is it correct?'''
         tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
         return tp / (tp + fp)
 
     def recall(self ,y_hat , y_true):
+        '''When it's actually yes, how often does it predict yes?'''
         tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
         return tp / (tp + fn)
 
     def accuracy(self , y_hat , y_true):
+        '''Accuracy: Overall, how often is the classifier correct?'''
         tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
         return (tp + tn) / (tp + fp + fn + tn)
 
     def specificity(self, y_hat , y_true):
+        '''When it's actually no, how often does it predict no?'''
         tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
         return tn / (fp + tn)
 
     def f1_score(self , y_hat , y_true):
+        '''This is a weighted average of the true positive rate (recall) and precision'''
         tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
         return 2 * tp/(2 * tp + fp + fn)
     
