@@ -26,11 +26,21 @@ nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 ,
 
 
 error_train , error_test = [] , []
-error_train  , error_test = nn.train_epoch(n_epoch = 50)
+error_train  , error_test = nn.train_epoch(n_epoch = 10)
 
-nn.prediction_accuracy()
 
-nlb.NNLib.plot(error_train , error_test)
+# nlb.NNLib.plot(error_train , error_test)
+
+y_pred = nn.predict(nn.W , nn.X_test , nn.b)
+ar = nlb.NNLib.confusion_matrix(y_pred , nn.Y_test)
+print(ar)
+print(f"Accuracy : {nn.accuracy(y_pred , nn.Y_test)}")
+print(f"Recall   : {nn.recall(y_pred , nn.Y_test)}")
+print(f"Precision: {nn.precision(y_pred , nn.Y_test)}")
+print(f"F1 score : {nn.f1_score(y_pred , nn.Y_test)}")
+
+
+
 
 
 

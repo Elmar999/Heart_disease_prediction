@@ -90,12 +90,6 @@ class NNLib:
     def softmax_deriv(Z):
         return Z*(1-Z)
 
-        # def grad(a):
-        #     return np.diag(a) - np.outer(a, a)
-
-        # a = softmax(Z)
-        # return np.array(np.array([grad(row) for row in a]))
-    
 
     def hadamard(A , B):
         C = np.empty(shape=(len(A) , len(A[0])))
@@ -130,7 +124,6 @@ class NNLib:
 
     
     def plot(train_loss , test_loss ):
-        ar = np.arange(0 , 100 , len(train_loss))
         # print(train_loss)
         plt.plot(train_loss)
         plt.plot(test_loss)
@@ -139,3 +132,22 @@ class NNLib:
         plt.xlabel('epoch')
         plt.legend(['train', 'val'], loc='upper left')
         plt.show()
+
+
+
+    def confusion_matrix(y_hat , y_true):
+        
+        #Tp -- Fp -- Fn -- Tn
+        matrix = [0, 0, 0, 0]
+        # print(y_pred)
+        for i in range(len(y_hat)):
+            if   np.argmax(y_hat[i]) == 0 and np.argmax(y_true[i]) == 0:
+                matrix[0] += 1 # true positive
+            elif np.argmax(y_hat[i]) == 0 and np.argmax(y_true[i]) == 1:
+                matrix[1] += 1 # false positive
+            elif np.argmax(y_hat[i]) == 1 and np.argmax(y_true[i]) == 0:
+                matrix[3] += 1 # true negative
+            else:
+                matrix[2] += 1 # false negative 
+        
+        return np.array(matrix)

@@ -139,13 +139,40 @@ class Neural:
         return dW , db
 
     
-    def prediction_accuracy(self ,error = False):
-        acc = 0
-        for i in range(len(self.X_test)):
-            acc += nlb.NNLib.accuracy(self.predict(self.W , self.X_test[i] , self.b), self.Y_test[i])
+    # def prediction_accuracy(self ,error = False):
+    #     acc = 0
+    #     for i in range(len(self.X_test)):
+    #         y_pred = self.predict(self.W , self.X_test[i] , self.b)
+    #         acc += nlb.NNLib.accuracy(y_pred, self.Y_test[i])
 
-        print(acc / len(self.X_test) * 100)
+    #     print(acc / len(self.X_test) * 100)
 
+
+    #     y_pred = self.predict(self.W , self.X_test , self.b)
+    #     ar = nlb.NNLib.confusion_matrix(y_pred , self.Y_test)
+
+
+
+    def precision(self, y_hat , y_true):
+        tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
+        return tp / (tp + fp)
+
+    def recall(self ,y_hat , y_true):
+        tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
+        return tp / (tp + fn)
+
+    def accuracy(self , y_hat , y_true):
+        tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
+        return (tp + tn) / (tp + fp + fn + tn)
+
+    def specificity(self, y_hat , y_true):
+        tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
+        return tn / (fp + tn)
+
+    def f1_score(self , y_hat , y_true):
+        tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
+        return 2 * tp/(2 * tp + fp + fn)
+    
 
     
     def train_epoch(self , n_epoch):
@@ -193,15 +220,16 @@ class Neural:
                     self.b[1] -= n*db[1]
 
             error_test = np.mean((self.predict(self.W , self.X_test , self.b) - self.Y_test)**2)
-            
-            
+      
             total_error_test += error_test
             total_error_train /= (self.batch_size * n_iteration)
             
             train_error.append(total_error_train)
             test_error.append(total_error_test)
-
-
+       
+        # y_pred = (self.predict(self.W , self.X_test , self.b)
+        # nlb.NNLib.confusion_matrix(y_pred , self.Y_test)
+        # print(ar)
         return train_error , test_error
 
 
