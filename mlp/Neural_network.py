@@ -139,13 +139,13 @@ class Neural:
         return dW , db
 
     
-    # def prediction_accuracy(self ,error = False):
-    #     acc = 0
-    #     for i in range(len(self.X_test)):
-    #         y_pred = self.predict(self.W , self.X_test[i] , self.b)
-    #         acc += nlb.NNLib.accuracy(y_pred, self.Y_test[i])
+    def prediction_accuracy(self ,error = False):
+        acc = 0
+        for i in range(len(self.X_test)):
+            y_pred = self.predict(self.W , self.X_test[i] , self.b)
+            acc += nlb.NNLib.accuracy(y_pred, self.Y_test[i])
 
-    #     print(acc / len(self.X_test) * 100)
+        print(acc / len(self.X_test) * 100)
 
 
     #     y_pred = self.predict(self.W , self.X_test , self.b)
@@ -159,7 +159,7 @@ class Neural:
 
     def recall(self ,y_hat , y_true):
         tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)
-        return tp / (tp + fn)
+        return tp / (tp + tn)
 
     def accuracy(self , y_hat , y_true):
         tp , fp , fn , tn = nlb.NNLib.confusion_matrix(y_hat , y_true)

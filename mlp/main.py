@@ -28,6 +28,7 @@ nn = NN.Neural(data_matrix=matrix ,batch_size = 4 , K_classes = 2 , n_hidden=1 ,
 error_train , error_test = [] , []
 error_train  , error_test = nn.train_epoch(n_epoch = 10)
 
+nn.prediction_accuracy()
 
 # nlb.NNLib.plot(error_train , error_test)
 
